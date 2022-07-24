@@ -1,6 +1,5 @@
 on:
-  # Trigger analysis when pushing in master or pull requests, and when creating
-  # a pull request. 
+  # Analyse le code apres chaque PUSH dans le répértoir du frontend sur la branche main
   push:
     branches:
       - main

@@ -13,7 +13,6 @@ jobs:
     - name: Checking out
       uses: actions/checkout@master
       with:
-        # Disabling shallow clone is recommended for improving relevancy of reporting
         fetch-depth: 0
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@master
@@ -27,3 +26,7 @@ jobs:
       env:
        SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
        SONAR_HOST_URL: ${{ secrets.SONARQUBE_HOST}} #OPTIONAL
+
+
+
+

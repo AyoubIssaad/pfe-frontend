@@ -1,13 +1,12 @@
 name: Build Docker Image And Publish
 
 # 1
-# Controls when the workflow will run
+# le script va se lancer apres un push vers la branche main
 on:
-  # Triggers the workflow on push events but only for the master branch
   push:
     branches: [ main ]
 
-  # Allows you to run this workflow manually from the Actions tab
+  # Permer de lancer ce workflow manuellement depuis GitHub actions
   workflow_dispatch:
     inputs:
       version:

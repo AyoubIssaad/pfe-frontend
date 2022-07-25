@@ -25,8 +25,9 @@ jobs:
         # login: ${{ secrets.SONARQUBE_TOKEN }}
         # Check the Quality Gate status.
     - name: SonarQube Quality Gate check
-      id: kariss-marocshop-frontend
+      id: SonarQube Quality Gate check
       uses: sonarsource/sonarqube-quality-gate-action@master
+      with: target/sonar/report-frontend.txt
       # Force to fail step after specific time.
       timeout-minutes: 5
       env:

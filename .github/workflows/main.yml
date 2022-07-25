@@ -81,13 +81,13 @@ jobs:
           force: true
           message: 'Overwritten by Github Actions - ${date}'
       - name: Pushes test file
-      uses: dmnemec/copy_file_to_another_repo_action@main
-      env:
-        API_TOKEN_GITHUB: ${{ secrets.GTHB_TOKEN }}
-      with:
-        source_file: 'docker_latest_tag.txt'
-        destination_repo: 'AyoubIssaad/MarocShop-deploiement'
-        destination_folder: ''
-        user_email: 'ayoub.issaad@gmail.com'
-        user_name: 'ayoubissaad'
-        commit_message: 'Updating frontend latest tag'
+        uses: dmnemec/copy_file_to_another_repo_action@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.GTHB_TOKEN }}
+        with:
+          source_file: 'docker_latest_tag.txt'
+          destination_repo: 'AyoubIssaad/MarocShop-deploiement'
+          destination_folder: ''
+          user_email: 'ayoub.issaad@gmail.com'
+          user_name: 'ayoubissaad'
+          commit_message: 'Updating frontend latest tag'

@@ -17,53 +17,53 @@ on:
         required: true
 jobs:
   # 1 - Analyse du code avec SonarQube
-  sonarqube:
-    name: SonarQube Trigger
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checking out
-      uses: actions/checkout@master
-      with:
-        fetch-depth: 0
-    - name: SonarQube Scan
-      uses: sonarsource/sonarqube-scan-action@master
-      env:
-        SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
-        SONAR_HOST_URL: ${{ secrets.SONARQUBE_HOST }}
-    - name: SonarQube Quality Gate check
-      id: sonarqube-quality-gate-check
-      uses: sonarsource/sonarqube-quality-gate-action@master
-      timeout-minutes: 5
-      env:
-       SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
-       SONAR_HOST_URL: ${{ secrets.SONARQUBE_HOST}} #OPTIONAL
-  # 2 - Construction de l'image Docker et publication dans DigitalOcean - dependendant du job sonarqube
-  build_and_push:
-    needs: sonarqube
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v2
+  # sonarqube:
+  #   name: SonarQube Trigger
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checking out
+  #     uses: actions/checkout@master
+  #     with:
+  #       fetch-depth: 0
+  #   - name: SonarQube Scan
+  #     uses: sonarsource/sonarqube-scan-action@master
+  #     env:
+  #       SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+  #       SONAR_HOST_URL: ${{ secrets.SONARQUBE_HOST }}
+  #   - name: SonarQube Quality Gate check
+  #     id: sonarqube-quality-gate-check
+  #     uses: sonarsource/sonarqube-quality-gate-action@master
+  #     timeout-minutes: 5
+  #     env:
+  #      SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+  #      SONAR_HOST_URL: ${{ secrets.SONARQUBE_HOST}} #OPTIONAL
+  # # 2 - Construction de l'image Docker et publication dans DigitalOcean - dependendant du job sonarqube
+  # build_and_push:
+  #   needs: sonarqube
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout the repo
+  #       uses: actions/checkout@v2
 
-      - name: Build container image
-        run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):latest .
+  #     - name: Build container image
+  #       run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):latest .
 
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+  #     - name: Install doctl
+  #       uses: digitalocean/action-doctl@v2
+  #       with:
+  #         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Log in to DigitalOcean Container Registry with short-lived credentials
-        run: doctl registry login --expiry-seconds 600
+  #     - name: Log in to DigitalOcean Container Registry with short-lived credentials
+  #       run: doctl registry login --expiry-seconds 600
 
-      # - name: Supprimer les anciennes images (fonctionnel)
-      #   run: if [ ! -z "$(doctl registry repository list | grep "$(echo $IMAGE_NAME)")" ]; then doctl registry repository delete-manifest $(echo $IMAGE_NAME) $(doctl registry repository list-tags $(echo $IMAGE_NAME) | grep -o "sha.*") --force; else echo "No repository"; fi
+  #     # - name: Supprimer les anciennes images (fonctionnel)
+  #     #   run: if [ ! -z "$(doctl registry repository list | grep "$(echo $IMAGE_NAME)")" ]; then doctl registry repository delete-manifest $(echo $IMAGE_NAME) $(doctl registry repository list-tags $(echo $IMAGE_NAME) | grep -o "sha.*") --force; else echo "No repository"; fi
 
-      - name: Push image to DigitalOcean Container Registry
-        run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME):latest
+  #     - name: Push image to DigitalOcean Container Registry
+  #       run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME):latest
  # 3 - create file wiith latest tag
   create_file_and_copy:
-    needs: build_and_push
+    # needs: build_and_push
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -72,7 +72,7 @@ jobs:
         uses: "finnp/create-file-action@master"
         env:
           FILE_NAME: "docker_latest_tag.txt"
-          FILE_DATA: $(echo $GITHUB_SHA | head -c7)
+          FILE_DATA: ${GITHUB_SHA::7}
       - name: Commit & Push
         uses: Andro999b/push@v1.3
         with:

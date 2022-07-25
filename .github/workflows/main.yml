@@ -16,7 +16,7 @@ on:
         description: 'Image version'
         required: true
 jobs:
-  1 - Analyse du code avec SonarQube
+  # 1 - Analyse du code avec SonarQube
   sonarqube:
     name: SonarQube Trigger
     runs-on: ubuntu-latest

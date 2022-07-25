@@ -1,10 +1,13 @@
-name: Build Docker Image And Publish
-
-# 1
-# le script va se lancer apres un push vers la branche main
+name: CI/CD FrontEnd - Scan with SonarQube, Build Docker Image then Publish consecutively
+# Liens vers le container registry de DigitalOcean et le nom de l'image
+env:
+  REGISTRY: "registry.digitalocean.com/kariss-marocshop"
+  IMAGE_NAME: "frontend"
 on:
+  # Ce workflow sera executé après chaque push dans la commit main
   push:
-    branches: [ main ]
+    branches:
+      - main
 
   # Permer de lancer ce workflow manuellement depuis GitHub actions
   workflow_dispatch:
@@ -12,13 +15,29 @@ on:
       version:
         description: 'Image version'
         required: true
-#2
-env:
-  REGISTRY: "registry.digitalocean.com/kariss-marocshop"
-  IMAGE_NAME: "frontend"
-
-#3
 jobs:
+  # 1 - Analyse du code avec SonarQube
+  sonarqube:
+    name: SonarQube Trigger
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checking out
+      uses: actions/checkout@master
+      with:
+        fetch-depth: 0
+    - name: SonarQube Scan
+      uses: sonarsource/sonarqube-scan-action@master
+      env:
+        SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONARQUBE_HOST }}
+    - name: SonarQube Quality Gate check
+      id: sonarqube-quality-gate-check
+      uses: sonarsource/sonarqube-quality-gate-action@master
+      timeout-minutes: 5
+      env:
+       SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+       SONAR_HOST_URL: ${{ secrets.SONARQUBE_HOST}} #OPTIONAL
+  # 2 - Construction de l'image Docker et publication dans DigitalOcean - dependendant du job sonarqube
   build_and_push:
     needs: sonarqube
     runs-on: ubuntu-latest

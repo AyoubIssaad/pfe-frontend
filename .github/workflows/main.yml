@@ -25,7 +25,7 @@ jobs:
         # login: ${{ secrets.SONARQUBE_TOKEN }}
         # Check the Quality Gate status.
     - name: SonarQube Quality Gate check
-      id: SonarQube Quality Gate check
+      id: sonarqube-quality-gate-check
       uses: sonarsource/sonarqube-quality-gate-action@master
       with:
         scanMetadataReportFile: /sonar/report-frontend.txt

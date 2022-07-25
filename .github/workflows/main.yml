@@ -63,8 +63,18 @@ jobs:
         run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME):latest
  # 3 - create file wiith latest tag
   create_file_and_copy:
+    needs: build_and_push
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Commit & Push
+        uses: Andro999b/push@v1.3
+        with:
+          github_token: ${{ secrets.GTHB_TOKEN }}
+          branch: main
+          force: true
+          message: 'Overwritten by Github Actions - ${date}'
       - name: create file
         uses: "finnp/create-file-action@master"
         env:

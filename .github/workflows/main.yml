@@ -73,13 +73,13 @@ jobs:
         env:
           FILE_NAME: "docker_latest_tag.txt"
           FILE_DATA: ${{ github.sha }}
-      - name: Commit & Push
-        uses: Andro999b/push@v1.3
-        with:
-          github_token: ${{ secrets.GTHB_TOKEN }}
-          branch: main
-          force: true
-          message: 'Overwritten by Github Actions - ${date}'
+      # - name: Commit & Push
+      #   uses: Andro999b/push@v1.3
+      #   with:
+      #     github_token: ${{ secrets.GTHB_TOKEN }}
+      #     branch: main
+      #     force: true
+      #     message: 'Overwritten by Github Actions - ${date}'
       - name: Pushes test file
         uses: dmnemec/copy_file_to_another_repo_action@main
         env:

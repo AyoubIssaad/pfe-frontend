@@ -68,6 +68,11 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+      - name: create file
+        uses: "finnp/create-file-action@master"
+        env:
+          FILE_NAME: "docker_latest_tag.txt"
+          FILE_DATA: $(echo $GITHUB_SHA | head -c7)
       - name: Commit & Push
         uses: Andro999b/push@v1.3
         with:
@@ -75,8 +80,3 @@ jobs:
           branch: main
           force: true
           message: 'Overwritten by Github Actions - ${date}'
-      - name: create file
-        uses: "finnp/create-file-action@master"
-        env:
-          FILE_NAME: "docker_latest_tag.txt"
-          FILE_DATA: $(echo $GITHUB_SHA | head -c7)

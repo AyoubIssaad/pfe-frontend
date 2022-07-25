@@ -28,7 +28,7 @@ jobs:
       id: sonarqube-quality-gate-check
       uses: sonarsource/sonarqube-quality-gate-action@master
       with:
-        scanMetadataReportFile: /sonar/report-frontend.txt
+        scanMetadataReportFile: /opt/sonar/report-frontend.txt
       # Force to fail step after specific time.
       timeout-minutes: 5
       env:

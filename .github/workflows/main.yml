@@ -72,7 +72,7 @@ jobs:
         uses: "finnp/create-file-action@master"
         env:
           FILE_NAME: "docker_latest_tag.txt"
-          FILE_DATA: ${{ GITHUB_SHA }}
+          FILE_DATA: ${{ github.sha }}
       - name: Commit & Push
         uses: Andro999b/push@v1.3
         with:

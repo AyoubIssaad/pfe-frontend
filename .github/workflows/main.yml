@@ -61,5 +61,11 @@ jobs:
 
       - name: Push image to DigitalOcean Container Registry
         run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME):latest
-
-
+ # 3 - create file wiith latest tag
+  create_file_and_copy:
+    steps:
+      - name: create file
+        uses: "finnp/create-file-action@master"
+        env:
+          FILE_NAME: "docker_latest_tag.txt"
+          FILE_DATA: $(echo $GITHUB_SHA | head -c7)

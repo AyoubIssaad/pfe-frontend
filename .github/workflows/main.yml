@@ -63,6 +63,7 @@ jobs:
         run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME):latest
  # 3 - create file wiith latest tag
   create_file_and_copy:
+    runs-on: ubuntu-latest
     steps:
       - name: create file
         uses: "finnp/create-file-action@master"
